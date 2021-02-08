@@ -84,7 +84,11 @@ pushd "${tmpdir}" > /dev/null
   unzip -d ./terraform terraform.zip > /dev/null
 
   echo "Compiling terraform-resource binaries..."
-  CGO_ENABLED=0 GOOS=linux GOARCH=amd64 "${release_dir}/scripts/build" "$PWD" > /dev/null
+  if [ `uname -m` = "aarch64" ] ; then
+     CGO_ENABLED=0 GOOS=linux GOARCH=arm64 "${release_dir}/scripts/build" "$PWD" > /dev/null
+  else
+     CGO_ENABLED=0 GOOS=linux GOARCH=amd64 "${release_dir}/scripts/build" "$PWD" > /dev/null
+  fi
 
   echo "Building docker image '${image_name}'..."
   cp "${release_dir}/docker-prod/Dockerfile" .
